@@ -12,7 +12,7 @@ use yii\filters\VerbFilter;
 /**
  * GamessController implements the CRUD actions for Games model.
  */
-class GamessController extends Controller
+class GamesController extends Controller
 {
     public function behaviors()
     {
