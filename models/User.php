@@ -2,102 +2,63 @@
 
 namespace app\models;
 
-class User extends \yii\base\Object implements \yii\web\IdentityInterface
+use Yii;
+
+/**
+ * This is the model class for table "{{%User}}".
+ *
+ * @property integer $user_id
+ * @property string $user_name
+ * @property integer $user_date_regestration
+ * @property integer $user_date_birth
+ * @property string $user_male
+ * @property string $user_avatar
+ * @property string $user_town
+ * @property integer $user_status
+ * @property string $user_email
+ * @property string $user_password
+ */
+class User extends \yii\db\ActiveRecord
 {
-    public $id;
-    public $username;
-    public $password;
-    public $authKey;
-    public $accessToken;
-
-    private static $users = [
-        '100' => [
-            'id' => '100',
-            'username' => 'admin',
-            'password' => 'admin',
-            'authKey' => 'test100key',
-            'accessToken' => '100-token',
-        ],
-        '101' => [
-            'id' => '101',
-            'username' => 'demo',
-            'password' => 'demo',
-            'authKey' => 'test101key',
-            'accessToken' => '101-token',
-        ],
-    ];
-
     /**
      * @inheritdoc
      */
-    public static function findIdentity($id)
+    public static function tableName()
     {
-        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
+        return '{{%User}}';
     }
 
     /**
      * @inheritdoc
      */
-    public static function findIdentityByAccessToken($token, $type = null)
+    public function rules()
     {
-        foreach (self::$users as $user) {
-            if ($user['accessToken'] === $token) {
-                return new static($user);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Finds user by username
-     *
-     * @param  string      $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-        foreach (self::$users as $user) {
-            if (strcasecmp($user['username'], $username) === 0) {
-                return new static($user);
-            }
-        }
-
-        return null;
+        return [
+            [['user_name', 'user_date_regestration'], 'required'],
+            [['user_date_regestration', 'user_date_birth', 'user_status'], 'integer'],
+            [['user_name'], 'string', 'max' => 20],
+            [['user_male'], 'string', 'max' => 4],
+            [['user_avatar', 'user_email', 'user_password'], 'string', 'max' => 255],
+            [['user_town'], 'string', 'max' => 40]
+        ];
     }
 
     /**
      * @inheritdoc
      */
-    public function getId()
+    public function attributeLabels()
     {
-        return $this->id;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getAuthKey()
-    {
-        return $this->authKey;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function validateAuthKey($authKey)
-    {
-        return $this->authKey === $authKey;
-    }
-
-    /**
-     * Validates password
-     *
-     * @param  string  $password password to validate
-     * @return boolean if password provided is valid for current user
-     */
-    public function validatePassword($password)
-    {
-        return $this->password === $password;
+        return [
+            'user_id' => 'User ID',
+            'user_name' => 'User Name',
+            'user_date_regestration' => 'User Date Regestration',
+            'user_date_birth' => 'User Date Birth',
+            'user_male' => 'User Male',
+            'user_avatar' => 'User Avatar',
+            'user_town' => 'User Town',
+            'user_status' => 'User Status',
+            'user_email' => 'User Email',
+            'user_password' => 'User Password',
+        ];
     }
 }
